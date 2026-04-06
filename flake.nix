@@ -1,3 +1,4 @@
+# made with nix flake init --template github:lopsided98/nix-ros-overlay
 {
   inputs = {
     nix-ros-overlay.url = "github:lopsided98/nix-ros-overlay/master";
@@ -63,8 +64,12 @@
             paths = [
               ros-core
               simulation-interfaces
+              ros-gz-bridge
               ros-gz-interfaces
               ros-gz-sim
+              ros-gz-sim-demos
+              sdformat-urdf
+              rviz2
             ];
           };
       in
@@ -72,7 +77,18 @@
         devShells.default = pkgs.mkShell {
           name = "ros-gz-jazzy";
           packages = [ rosEnv ];
+
           shellHook = ''
+            export XDG_RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+            export DISPLAY="''${DISPLAY:-:0}"
+            export WAYLAND_DISPLAY="''${WAYLAND_DISPLAY:-wayland-1}"
+            export XDG_SESSION_TYPE="''${XDG_SESSION_TYPE:-wayland}"
+
+            export GZ_IP="''${GZ_IP:-127.0.0.1}"
+            export GZ_PARTITION="''${GZ_PARTITION:-gazebo$UID}"
+            export GZ_SIM_RESOURCE_PATH="${ros.ros-gz-sim-demos}/share''${GZ_SIM_RESOURCE_PATH:+:''${GZ_SIM_RESOURCE_PATH}}"
+            export QT_QPA_PLATFORM="''${QT_QPA_PLATFORM:-xcb}"
+
             if [[ $- == *i* ]]; then
               exec ${pkgs.zsh}/bin/zsh
             fi
