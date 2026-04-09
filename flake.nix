@@ -89,6 +89,8 @@
             export GZ_SIM_RESOURCE_PATH="${ros.ros-gz-sim-demos}/share''${GZ_SIM_RESOURCE_PATH:+:''${GZ_SIM_RESOURCE_PATH}}"
             export QT_QPA_PLATFORM="''${QT_QPA_PLATFORM:-xcb}"
 
+            unalias gz
+
             if [[ $- == *i* ]]; then
               exec ${pkgs.zsh}/bin/zsh
             fi
